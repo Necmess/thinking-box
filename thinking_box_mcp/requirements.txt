@@ -1,0 +1,18 @@
+# Thinking Box MCP 서버 패키지
+
+# MCP SDK (실제 MCP 서버용)
+mcp>=1.0.0
+
+# Notion API
+notion-client>=2.2.1
+
+# HTTP REST API (옵션)
+fastapi>=0.109.0
+uvicorn>=0.27.0
+pydantic>=2.5.0
+
+# 환경 변수
+python-dotenv>=1.0.0
+
+# 유틸리티
+httpx>=0.26.0

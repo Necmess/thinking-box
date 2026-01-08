@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "thinking-box": {
+      "command": "python",
+      "args": [
+        "/path/to/thinking_box_mcp/mcp_server.py"
+      ],
+      "env": {
+        "NOTION_TOKEN": "secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "NOTION_DATABASE_ID": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    }
+  }
+}
