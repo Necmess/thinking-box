@@ -2,7 +2,7 @@
 
 Thinking Box 에이전트의 출력 결과를 Notion Database에 저장하는 MCP 서버
 
-## ⭐ 완전 통합 버전
+## 완전 통합 버전
 
 **이제 Thinking Box와 완전히 통합되었습니다!**
 
@@ -14,11 +14,11 @@ Thinking Box 에이전트의 출력 결과를 Notion Database에 저장하는 MC
 
 자세한 내용은 **[INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)** 참고
 
-## 🎯 목표
+## 목표
 
 LLM 에이전트가 생성한 사고 결과(JSON)를 구조화하여 Notion에 자동 저장
 
-## 🏗️ 아키텍처
+## 아키텍처
 
 ```
 ┌─────────────────────┐
@@ -50,7 +50,7 @@ LLM 에이전트가 생성한 사고 결과(JSON)를 구조화하여 Notion에 �
 └──────────────────────┘
 ```
 
-## 📦 설치
+## 설치
 
 ```bash
 # 1. 의존성 설치
@@ -61,14 +61,16 @@ cp .env.example .env
 # .env 파일 편집하여 Notion 토큰/DB ID 입력
 ```
 
-## 🔑 Notion 설정
+## Notion 설정
 
 ### 1. Integration 생성
+
 1. https://www.notion.so/my-integrations 접속
 2. "New integration" 생성
-3. `NOTION_TOKEN` 복사 (secret_로 시작)
+3. `NOTION_TOKEN` 복사 (secret\_로 시작)
 
 ### 2. Database 생성 및 연결
+
 1. Notion에서 새 Database 생성
 2. 다음 속성(Properties) 추가:
    - **Title** (title)
@@ -83,11 +85,12 @@ cp .env.example .env
 4. Database ID 복사 (URL에서 확인)
    - URL 형식: `notion.so/{workspace}/{DATABASE_ID}?v=...`
 
-## 🚀 사용법
+## 사용법
 
 ### 방식 1: MCP 서버 (Claude Desktop)
 
 #### 1단계: MCP 서버 설정
+
 `claude_desktop_config.json` 파일을 Claude Desktop 설정에 추가:
 
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
@@ -109,9 +112,11 @@ cp .env.example .env
 ```
 
 #### 2단계: Claude Desktop에서 사용
+
 1. Claude Desktop 재시작
 2. MCP 연결 확인 (🔌 아이콘)
 3. 프롬프트 예시:
+
 ```
 다음 내용을 Notion에 저장해줘:
 
@@ -132,6 +137,7 @@ cp .env.example .env
 ### 방식 2: HTTP REST API
 
 #### 1단계: 서버 실행
+
 ```bash
 python http_server.py
 # 또는
@@ -139,6 +145,7 @@ uvicorn http_server:app --reload --port 8000
 ```
 
 #### 2단계: HTTP 요청
+
 ```bash
 curl -X POST http://localhost:8000/ingest \
   -H "Content-Type: application/json" \
@@ -157,24 +164,29 @@ curl -X POST http://localhost:8000/ingest \
 ```
 
 #### 3단계: 테스트 스크립트 실행
+
 ```bash
 python test_api.py
 ```
 
-## 📊 API 문서
+## API 문서
 
 ### 엔드포인트
 
 #### `GET /`
+
 헬스 체크 및 서비스 정보
 
 #### `GET /health`
+
 서버 상태 및 Notion 연결 확인
 
 #### `POST /ingest`
+
 Thinking Box 결과 저장
 
 **요청 본문**:
+
 ```json
 {
   "session_id": "string",
@@ -190,6 +202,7 @@ Thinking Box 결과 저장
 ```
 
 **응답 (201)**:
+
 ```json
 {
   "success": true,
@@ -201,9 +214,10 @@ Thinking Box 결과 저장
 ```
 
 ### Swagger UI
+
 서버 실행 후 http://localhost:8000/docs 접속
 
-## 🧪 테스트
+## 테스트
 
 ```bash
 # 1. 서버 실행
@@ -213,7 +227,7 @@ python http_server.py
 python test_api.py
 ```
 
-## 📁 프로젝트 구조
+## 프로젝트 구조
 
 ```
 thinking_box_mcp/
@@ -230,6 +244,7 @@ thinking_box_mcp/
 ## 🔧 확장 포인트
 
 ### 1. STT 통합
+
 ```python
 # 음성 → 텍스트 → Thinking Box → MCP → Notion
 from speech_recognition import Recognizer
@@ -241,6 +256,7 @@ def process_audio_to_notion(audio_file):
 ```
 
 ### 2. 사용자 분리
+
 ```python
 # Database ID를 사용자별로 분리
 user_databases = {
@@ -256,6 +272,7 @@ async def ingest(user_id: str, data: ThinkingResult):
 ```
 
 ### 3. 멀티 Database 지원
+
 ```python
 # 프로젝트별 Database 자동 생성
 def get_or_create_database(project_name):
@@ -264,6 +281,7 @@ def get_or_create_database(project_name):
 ```
 
 ### 4. 실시간 스트리밍
+
 ```python
 # WebSocket으로 실시간 저장 상태 전송
 from fastapi import WebSocket
@@ -275,6 +293,7 @@ async def websocket_endpoint(websocket: WebSocket):
 ```
 
 ### 5. 배치 처리
+
 ```python
 # 여러 결과를 한 번에 저장
 @app.post("/ingest/batch")
@@ -286,15 +305,16 @@ async def batch_ingest(items: List[ThinkingResult]):
     return results
 ```
 
-## 🚨 주의사항 (MVP)
+## 주의사항 (MVP)
 
 현재는 예선 MVP이므로:
+
 - ❌ 인증/권한 관리 없음
 - ❌ 복잡한 에러 복구 없음
 - ❌ 프로덕션 배포 고려 없음
 - ✅ 단일 워크스페이스/DB 전제
 - ✅ 로컬 개발 환경 중심
 
-## 📝 라이센스
+## 라이센스
 
 MIT
