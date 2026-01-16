@@ -1,0 +1,2 @@
+-r thinking_box/requirements.txt
+-r thinking_box_mcp/requirements.txt
