@@ -1,151 +1,207 @@
-# Thinking Box 프로젝트
+# Thinking Box - Cloud Deployment 🚀
 
-회의록/대화를 3단계로 분석하고 Notion에 자동 저장하는 멀티 에이전트 시스템
+**AI 기반 3단계 사고 분석 시스템** - Streamlit Cloud 배포 버전
 
-## 📂 프로젝트 구성
-
-### 📁 [thinking_box/](./thinking_box)
-**핵심 분석 엔진** - 3-Agent 사고 지원 시스템
-
-- 3단계 분석: 정제 → 아이디어 추출 → 계획 구조화
-- 마크다운 출력
-- 독립 실행 가능
-
-```bash
-cd thinking_box
-python main.py --input example_input.txt
-```
-
-[📖 상세 문서](./thinking_box/README.md)
+Claude Sonnet 4 + Whisper base (한국어 최적화)
 
 ---
 
-### 📁 [thinking_box_mcp/](./thinking_box_mcp)
-**MCP 서버 & Notion 통합** - 자동 저장 시스템
-
-- Notion Database 자동 저장
-- MCP 서버 (Claude Desktop 연동)
-- HTTP REST API
-- Thinking Box와 완전 통합
+## ⚡️ 빠른 시작
 
 ```bash
-cd thinking_box_mcp
-python run.py
+# 1. 압축 해제
+tar -xzf thinking-box-claude-deploy.tar.gz
+cd thinking-box-claude-deploy
+
+# 2. 기존 agents, prompts 복사
+cp -r old_thinking_box/agents ./thinking_box/
+cp -r old_thinking_box/prompts ./thinking_box/
+
+# 3. GitHub 푸시
+git init && git add . && git commit -m "Deploy"
+git remote add origin <your-repo>
+git push -u origin main
+
+# 4. Streamlit Cloud 배포
+# https://share.streamlit.io/
+# → New app → 레포 선택 → Deploy!
+
+# 5. API 키 설정
+# Settings → Secrets → ANTHROPIC_API_KEY 추가
 ```
 
-[📖 상세 문서](./thinking_box_mcp/README.md) | [🚀 빠른 시작](./thinking_box_mcp/QUICKSTART.md)
+**배포 완료! 5분 소요**
 
 ---
 
-## 🚀 빠른 시작
+## 📋 기술 스택
 
-### 1. 설치
-```bash
-# Thinking Box 의존성
-cd thinking_box
-pip install -r requirements.txt
+### LLM: Claude Sonnet 4
 
-# MCP 서버 의존성
-cd ../thinking_box_mcp
-pip install -r requirements.txt
+```
+✅ 맥락 이해 탁월 (회의록 분석 최적)
+✅ 긴 대화 처리 우수
+✅ 한국어 품질 안정적
+✅ 이미 프롬프트 최적화됨
 ```
 
-### 2. 환경 설정
+### STT: Whisper base
 
-**thinking_box/.env**:
 ```
-ANTHROPIC_API_KEY=your_api_key
+✅ 크기: 74MB (경량)
+✅ 한국어 정확도: ~85%
+✅ 메모리: ~300MB
+✅ Streamlit Cloud에서 작동
+✅ 무료 (로컬 실행)
 ```
-
-**thinking_box_mcp/.env**:
-```
-ANTHROPIC_API_KEY=your_api_key
-NOTION_TOKEN=secret_...
-NOTION_DATABASE_ID=...
-```
-
-### 3. 실행
-
-#### 옵션 A: 기본 분석 (마크다운만)
-```bash
-cd thinking_box
-python main.py --input example_input.txt
-```
-
-#### 옵션 B: Notion 자동 저장 ⭐️
-```bash
-cd thinking_box_mcp
-python run.py
-```
-
----
-
-## 💡 사용 시나리오
-
-| 상황 | 사용 방법 | 설명 |
-|------|----------|------|
-| 빠른 분석 | `thinking_box/main.py` | 로컬 마크다운 생성 |
-| Notion 공유 | `thinking_box_mcp/run.py` | 자동 저장 + 팀 공유 |
-| API 서버 | `thinking_box_mcp/http_server.py` | 외부 시스템 연동 |
-| Claude Desktop | MCP 설정 | 직접 연동 |
 
 ---
 
 ## 🎯 핵심 기능
 
-### Thinking Box (핵심 엔진)
-- ✅ Agent 1: 노이즈 제거 & 구조화
-- ✅ Agent 2: 아이디어 추출 & 순위화
-- ✅ Agent 3: 실행 계획 구조화
-- ✅ 마크다운 출력
-
-### MCP 서버 (통합 & 저장)
-- ✅ Thinking Box 자동 실행
-- ✅ JSON 자동 변환
-- ✅ Notion 자동 저장
-- ✅ HTTP REST API
-- ✅ MCP 프로토콜 (Claude Desktop)
+- 🧠 **3단계 AI 분석**: 정제 → 아이디어 → 계획
+- 📝 **텍스트 입력**: 회의록, 대화 직접 입력
+- 🎤 **음성 입력**: 오디오 파일 STT (한국어/영어)
+- 🌐 **웹 UI**: Streamlit 기반 인터페이스
+- 💾 **결과 다운로드**: 마크다운 파일 저장
 
 ---
 
-## 📊 데이터 플로우
+## 📦 구조
 
 ```
-원본 회의록
-    ↓
-[thinking_box]
-  - Agent 1: 정제
-  - Agent 2: 아이디어
-  - Agent 3: 계획
-    ↓
-마크다운 문서
-    ↓
-[thinking_box_mcp]
-  - JSON 변환
-  - Notion 저장
-    ↓
-Notion Database
+thinking-box-claude-deploy/
+├── thinking_box/
+│   ├── core/
+│   │   └── llm_client.py         # Claude API
+│   ├── agents/                    # ⚠️ 복사 필요
+│   ├── prompts/                   # ⚠️ 복사 필요
+│   ├── stt/
+│   │   └── whisper_stt.py        # Whisper base
+│   └── ui/
+│       └── streamlit_app.py      # 클라우드 최적화
+│
+├── .streamlit/
+│   ├── config.toml
+│   └── secrets.toml.example
+│
+├── requirements.txt               # Anthropic + Whisper
+├── README_DEPLOY.md               # 상세 배포 가이드
+├── QUICKSTART_CLOUD.md            # 5분 빠른 시작
+└── .gitignore
 ```
 
 ---
 
-## 📚 문서
+## 🚀 배포 가이드
 
-- **Thinking Box**: [thinking_box/README.md](./thinking_box/README.md)
-- **MCP 서버**: [thinking_box_mcp/README.md](./thinking_box_mcp/README.md)
-- **빠른 시작**: [thinking_box_mcp/QUICKSTART.md](./thinking_box_mcp/QUICKSTART.md)
-- **통합 가이드**: [thinking_box_mcp/INTEGRATION_GUIDE.md](./thinking_box_mcp/INTEGRATION_GUIDE.md)
-- **아키텍처**: [thinking_box_mcp/ARCHITECTURE.md](./thinking_box_mcp/ARCHITECTURE.md)
+### 상세 가이드
+
+👉 [README_DEPLOY.md](README_DEPLOY.md)
+
+### 빠른 시작 (5분)
+
+👉 [QUICKSTART_CLOUD.md](QUICKSTART_CLOUD.md)
+
+---
+
+## 💰 비용
+
+### Claude API
+
+```
+입력:  $3 / 1M tokens
+출력:  $15 / 1M tokens
+
+예상: 회의록 1개 = $0.01-0.05
+```
+
+### Streamlit Cloud
+
+```
+무료: Public apps
+```
+
+### Whisper
+
+```
+무료: 로컬 실행
+```
+
+**총 예상 비용: ~$1-5/월** (사용량에 따라)
+
+---
+
+## 🔧 로컬 개발
+
+```bash
+# 의존성 설치
+pip install -r requirements.txt
+brew install ffmpeg
+
+# Secrets 설정
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+# secrets.toml에 Claude API 키 입력
+
+# 실행
+streamlit run thinking_box/ui/streamlit_app.py
+```
+
+### 🧩 CLI 실행 (텍스트만)
+
+```bash
+cd thinking_box
+export ANTHROPIC_API_KEY=your_api_key
+python main.py --input example_input.txt --output result.md
+```
+
+Whisper STT와 Streamlit이 필요 없는 최소 실행 경로입니다.
+
+---
+
+## 📊 Claude vs 다른 LLM
+
+| 특징            | Claude Sonnet 4 | GPT-4o       |
+| --------------- | --------------- | ------------ |
+| **회의록 분석** | ⭐️⭐️⭐️⭐️⭐️ | ⭐️⭐️⭐️⭐️ |
+| **맥락 이해**   | ⭐️⭐️⭐️⭐️⭐️ | ⭐️⭐️⭐️⭐️ |
+| **한국어**      | ⭐️⭐️⭐️⭐️⭐️ | ⭐️⭐️⭐️⭐️ |
+| **긴 대화**     | ⭐️⭐️⭐️⭐️⭐️ | ⭐️⭐️⭐️    |
+| **비용**        | ~$0.01/분석     | ~$0.01/분석  |
+
+**결론**: 회의록 분석은 Claude가 더 적합! ✅
+
+---
+
+## ⚠️ 주의사항
+
+### 필수 파일 복사
+
+```bash
+# agents와 prompts는 기존 프로젝트에서 복사!
+cp -r old_thinking_box/agents ./thinking_box/
+cp -r old_thinking_box/prompts ./thinking_box/
+```
+
+### Secrets 보안
+
+```
+.streamlit/secrets.toml을 Git에 커밋하지 마세요!
+API 키는 Streamlit Cloud Secrets에만 저장!
+```
+
+### MCP 서버
+
+```
+이 배포 패키지는 thinking_box만 포함
+thinking_box_mcp는 별도로 유지
+```
 
 ---
 
 ## 🤝 기여
 
-1. Fork the repository
-2. Create feature branch
-3. Commit changes
-4. Push to branch
-5. Create Pull Request
+Issues와 Pull Requests 환영합니다!
 
 ---
 
@@ -155,4 +211,12 @@ MIT License
 
 ---
 
-**Made with ❤️ by Thinking Box Team**
+## 🔗 링크
+
+- [Anthropic API](https://console.anthropic.com/)
+- [Streamlit Cloud](https://streamlit.io/cloud)
+- [Whisper](https://github.com/openai/whisper)
+
+---
+
+**Made with ❤️ | Thinking Box Team**

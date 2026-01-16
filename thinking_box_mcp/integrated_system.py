@@ -10,6 +10,7 @@ import uuid
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any
+from dotenv import load_dotenv
 
 # Thinking Box 모듈 임포트 (원본 프로젝트에서)
 sys.path.insert(0, str(Path(__file__).parent.parent / 'thinking_box'))
@@ -25,6 +26,9 @@ except ImportError:
 
 # MCP 서버 모듈 임포트
 from notion_storage import NotionStorage
+
+# 환경 변수 로드 (.env)
+load_dotenv()
 
 
 class ThinkingBoxNotion:
