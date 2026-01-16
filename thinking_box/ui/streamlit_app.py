@@ -24,7 +24,7 @@ for candidate in (DOTENV_PATH, MCP_ENV_PATH):
     if candidate.exists():
         load_dotenv(dotenv_path=candidate)
         break
-load_dotenv(dotenv_path=DOTENV_PATH if DOTENV_PATH.exists() else None)
+# Streamlit Cloud에서는 Secrets를 바로 os.environ에 넣어 사용
 
 # Add parent directory to path
 if __name__ == "__main__":
